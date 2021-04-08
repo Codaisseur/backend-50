@@ -1,42 +1,19 @@
 const express = require("express");
 const PORT = 4001;
-const User = require("./models").user;
+
+const userRouter = require("./routers/user");
+const listRouter = require("./routers/todolists");
+const { logginMiddleware } = require("./middlewares");
 
 const app = express();
 
-app.use(express.json());
+// Middlewares at APPLICATION LEVEL
+app.use(express.json()); // body-parser middleware { req, res }
+app.use(logginMiddleware); // our middleware
+//app.use(failRandomly);
 
-app.get("/users", async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.send(users);
-  } catch (e) {
-    console.log(e.message);
-  }
-});
-
-app.get("/users/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findByPk(id);
-    if (!user) {
-      res.status(404).send("user not found");
-    }
-    res.send(user);
-  } catch (e) {
-    console.log(e.message);
-  }
-});
-
-app.post("/users", async (req, res) => {
-  try {
-    console.log("creating new user");
-    const { name, email } = req.body;
-    const newGuy = await User.create({ name: name, email: email });
-    res.send(newGuy);
-  } catch (e) {
-    console.log(e.message);
-  }
-});
+// Routers
+app.use("/users", userRouter);
+app.use("/lists", listRouter);
 
 app.listen(PORT, () => console.log("listening on 4001"));
