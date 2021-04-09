@@ -29,27 +29,6 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
-  try {
-    console.log("body", req.body);
-    const { email, name, password } = req.body;
-    if (!email || !password) {
-      return res
-        .status(400)
-        .send("You must provide an email address and password");
-    }
-    const exists = await User.findOne({ where: { email: email } });
-    if (exists) {
-      return res.status(400).send("A user with this email already exists");
-    }
-    const newUser = await User.create({ name, email, password });
-
-    res.send(newUser);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
