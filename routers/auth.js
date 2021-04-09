@@ -41,14 +41,14 @@ router.post("/login", async (req, res, next) => {
     const user = await User.findOne({ where: { email } }); //
 
     if (!user) {
-      return res.status(404).send("There is no user with this email");
+      return res.status(404).send("Invalid Credentials");
     }
     // check if the passwords match
 
     const match = bcrypt.compareSync(password, user.password);
 
     if (!match) {
-      return res.status(400).send("Passwords don't match");
+      return res.status(400).send("Invalid Credentials");
     }
 
     const token = toJWT({ userId: user.id });

@@ -2,7 +2,7 @@ const { Router } = require("express");
 const User = require("../models").user;
 const TodoList = require("../models").todoList;
 const TodoItem = require("../models").todoItem;
-
+const { authMiddleware } = require("../auth/middleware");
 const router = new Router();
 
 router.get("/", async (req, res) => {
@@ -16,10 +16,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", authMiddleware, async (req, res, next) => {
   try {
+    console.log("who am i?", req.user);
+
     const { id } = req.params;
-    const user = await User.findByP(id);
+    const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).send("User not found");
     }
@@ -29,6 +31,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// dont want anybody but logged in users to be able to delete
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
