@@ -10,7 +10,6 @@ const app = express();
 // Middlewares at APPLICATION LEVEL
 app.use(express.json()); // body-parser middleware { req, res }
 app.use(logginMiddleware); // our middleware
-//app.use(failRandomly);
 
 // Routers
 app.use("/users", userRouter);

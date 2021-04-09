@@ -7,12 +7,15 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {}
+    static associate(models) {
+      todoItem.belongsTo(models.todoList);
+    }
   }
   todoItem.init(
     {
       task: DataTypes.STRING,
       deadline: DataTypes.STRING,
+      todoListId: DataTypes.INTEGER,
     },
     {
       sequelize,
